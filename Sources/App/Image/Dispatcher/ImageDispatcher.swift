@@ -35,12 +35,14 @@ class ImageDispatcher {
   }
   
   /*
-  ** Gets an image from DB
+  ** Gets a random image from DB
   */
   func getImage() throws -> Data {
     
-    let randomImage = try Image.query().first()
-    let getURL = URL(fileURLWithPath: (randomImage?.path)!).appendingPathComponent((randomImage?.name)!, isDirectory: false)
+    let images = try Image.query().all()
+    let randomIndex = arc4random_uniform(UInt32(images.count))
+    let image = images[Int(randomIndex)]
+    let getURL = URL(fileURLWithPath: image.path).appendingPathComponent(image.name, isDirectory: false)
     
     return try Data(contentsOf: getURL)
   }
