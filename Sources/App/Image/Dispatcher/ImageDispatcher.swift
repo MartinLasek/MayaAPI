@@ -9,6 +9,9 @@ class ImageDispatcher {
     self.drop = drop
   }
   
+  /*
+  ** Saves given image to DB and to Disk
+  */
   func saveImage(userUUID: String, bytes: Bytes) throws {
     
     let path = drop.workDir + Image.imageDirectory
@@ -19,17 +22,21 @@ class ImageDispatcher {
       "path": path
     ])
     
-    let saveURL = URL(fileURLWithPath: path).appendingPathComponent(name, isDirectory: false)
+    var image = try Image(node: imageNode)
     
-    // save image to path
+    let saveURL = URL(fileURLWithPath: image.path).appendingPathComponent(image.name, isDirectory: false)
+    
+    // save image to disk
     let data = Data(bytes: bytes)
     try data.write(to: saveURL)
     
     // save image to database
-    var image = try Image(node: imageNode)
     try image.save()
   }
   
+  /*
+  ** Gets an image from DB
+  */
   func getImage() throws -> Data {
     
     let randomImage = try Image.query().first()

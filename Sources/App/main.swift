@@ -14,7 +14,7 @@ drop.post("receive-image") { req in
 
   if let contentType = req.headers["Content-Type"], contentType.contains("image/png"), let id = req.headers["id"], let bytes = req.body.bytes {
     
-    // save sent image
+    // save image
     try imageDispatcher.saveImage(userUUID: id, bytes: bytes)
     
     // get image to return
