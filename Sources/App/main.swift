@@ -11,8 +11,12 @@ drop.preparations.append(Image.self)
 drop.post("receive-image") { req in
   
   let imageDispatcher = ImageDispatcher(drop: drop)
+  let userDispatcher = UserDispatcher(drop: drop)
 
   if let contentType = req.headers["Content-Type"], contentType.contains("image/png"), let id = req.headers["id"], let bytes = req.body.bytes {
+    
+    // save user
+    try userDispatcher.saveUser(userPhoneUUID: id)
     
     // save image
     try imageDispatcher.saveImage(userUUID: id, bytes: bytes)

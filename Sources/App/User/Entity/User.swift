@@ -3,23 +3,31 @@ import Vapor
 final class User: Model {
   var id: Node?
   var exists: Bool = false
-  let username: String?
-  let phoneId: String
+  var phoneId: String
+  var username: String?
+  
+  init(phoneId: String) {
+    self.phoneId = phoneId
+  }
   
   init(node: Node, in context: Context) throws {
-    username = try node.extract("username")
-    phoneId = try node.extract("phoneId")
+    username = try? node.extract("username")
+    phoneId = try node.extract("phoneid")
   }
   
   func makeNode(context: Context) throws -> Node {
-    return try Node(node: ["id": id, "username": username, "phoneId": phoneId])
+    return try Node(node: [
+      "id": id,
+      "phoneid": phoneId,
+      "username": username
+    ])
   }
   
   static func prepare(_ database: Database) throws {
     try database.create("users") { user in
       user.id()
-      user.string("username")
-      user.string("phoneId")
+      user.string("phoneid")
+      user.string("username", optional: true)
     }
   }
   
