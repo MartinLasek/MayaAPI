@@ -8,13 +8,16 @@ class UserDispatcher {
     self.drop = drop
   }
   
-  func saveUser(userPhoneUUID: String) throws {
+  func saveUser(phoneUUID: String) throws -> User {
     
-    var user = User(phoneId: userPhoneUUID)
-    let result = try User.query().filter("phoneid", userPhoneUUID).all().array
+    var user = User(phoneId: phoneUUID)
+    let result = try User.query().filter("phoneid", user.phoneId).all().array
     
     if (result.isEmpty) {
       try user.save()
+      return user
     }
+    
+    return result.first!
   }
 }
