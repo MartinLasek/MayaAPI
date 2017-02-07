@@ -26,8 +26,15 @@ drop.post("receive-image") { req in
     // save user image relation
     try userImageDispatcher.saveRelation(user: user, image: image, type: UserImage.sent)
     
-    // get image to return
-    let file = try imageDispatcher.getImage()
+    // get random image to return
+    let randomImage = try imageDispatcher.getImage()
+    
+    // save random image relation
+    try userImageDispatcher.saveRelation(user: user, image: randomImage, type: UserImage.received)
+    
+    let getURL = URL(fileURLWithPath: randomImage.path).appendingPathComponent(randomImage.name, isDirectory: false)
+    let file = try Data(contentsOf: getURL)
+    
     return Response(headers: ["Content-Type": "image/png; charset=utf-8"], body: Body(file))
   }
   
