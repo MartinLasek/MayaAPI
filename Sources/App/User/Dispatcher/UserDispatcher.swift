@@ -10,14 +10,13 @@ class UserDispatcher {
   
   func saveUser(phoneUUID: String) throws -> User {
     
-    var user = User(phoneId: phoneUUID)
-    let result = try User.query().filter("phoneid", user.phoneId).all().array
-    
-    if (result.isEmpty) {
-      try user.save()
-      return user
+    if let usr = try User.query().filter("phoneid", phoneUUID).first() {
+      return usr
     }
     
-    return result.first!
+    var user = User(phoneId: phoneUUID)
+    try user.save()
+    
+    return user
   }
 }
