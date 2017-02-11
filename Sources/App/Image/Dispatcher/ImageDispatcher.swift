@@ -64,4 +64,14 @@ class ImageDispatcher {
     var receivedImage = ReceivedImage(userId: userId, imageId: imageId)
     try receivedImage.save()
   }
+  
+  func getAllImagesBy(user: User) throws -> [String] {
+    
+    guard let userId = user.id?.int else {
+      throw UserError.userIdNotAvailble
+    }
+    
+    let images = try Image.query().filter("userid", userId).all().map {$0.name}
+    return images
+  }
 }

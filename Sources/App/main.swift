@@ -32,4 +32,20 @@ drop.post("sent-image") { req in
   return "could not save image"
 }
 
+drop.get("my-images") { req in
+  
+  let imageDispatcher = ImageDispatcher(drop: drop)
+  let userDispatcher = UserDispatcher(drop: drop)
+  
+  if let id = req.headers["id"] {
+    
+    let user = try userDispatcher.getUserBy(phoneUUID: id)
+    let images = try imageDispatcher.getAllImagesBy(user: user)
+    
+    return try JSON(node: images)
+  }
+  
+  return "could not return all images"
+}
+
 drop.run()
