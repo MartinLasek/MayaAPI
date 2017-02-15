@@ -15,7 +15,7 @@ drop.post("sent-image") { req in
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
 
-  if let contentType = req.headers["Content-Type"], contentType.contains("image/png"), let id = req.headers["id"], let bytes = req.body.bytes {
+  if let contentType = req.headers["Content-Type"], contentType.contains("image/png"), let id = req.headers["phoneUUID"], let bytes = req.body.bytes {
     
     let user = try userDispatcher.saveUser(phoneUUID: id)
     let image = try imageDispatcher.saveImage(user: user, bytes: bytes)
@@ -37,7 +37,7 @@ drop.get("my-images") { req in
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
   
-  if let id = req.headers["id"] {
+  if let id = req.headers["phoneUUID"] {
     
     let user = try userDispatcher.getUserBy(phoneUUID: id)
     let images = try imageDispatcher.getAllImagesBy(user: user)
