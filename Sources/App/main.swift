@@ -10,7 +10,8 @@ drop.preparations.append(Image.self)
 drop.preparations.append(SentImage.self)
 drop.preparations.append(ReceivedImage.self)
 
-drop.post("sent-image") { req in
+// saves new image to database
+drop.post("image/new") { req in
   
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
@@ -32,7 +33,27 @@ drop.post("sent-image") { req in
   return "could not save image"
 }
 
-drop.get("my-images") { req in
+// returns random image
+drop.get("image/random") { req in
+  let imageDispatcher = ImageDispatcher(drop: drop)
+  let userDispatcher = UserDispatcher(drop: drop)
+  
+  if let phoneUUID = req.headers["phoneUUID"] {
+    
+    let user = try userDispatcher.getUserBy(phoneUUID: phoneUUID)
+    let randomImage = try imageDispatcher.getRandomImage()
+    try imageDispatcher.saveUserReceivedImage(user: user, image: randomImage)
+    
+    return try JSON(node: [
+      "image": randomImage.name
+      ])
+  }
+  
+  return "couldn't get random image"
+}
+
+// currently returning all images related to given user
+drop.get("image/list/sent") { req in
   
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
@@ -47,5 +68,11 @@ drop.get("my-images") { req in
   
   return "could not return all images"
 }
+
+// API Endpoint to be implemented
+// * image/list/received
+// * wishlist/list
+// * wishlist/new
+// * wishlist/update/{id}
 
 drop.run()
