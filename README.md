@@ -1,6 +1,6 @@
 # MayaAPI
 
-This project is the API used by my App Project: [Maya](https://github.com/MartinLasek/Maya)
+**This project is the API used by my App Project: [Maya](https://github.com/MartinLasek/Maya)**
 
 I am having alot of fun diving deep and deeper into backend programming with swift using [Vapor](https://github.com/vapor/vapor)!
 
