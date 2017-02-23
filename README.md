@@ -4,7 +4,7 @@
 
 I use this project to dive deeper into backend programming with [Swift](https://github.com/apple/swift) using [Vapor](https://github.com/vapor/vapor)!
 
-## Work Plan
+## Workplan
 
 Date | Functionality
 --- | ---
