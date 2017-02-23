@@ -9,9 +9,7 @@ class ImageDispatcher {
     self.drop = drop
   }
   
-  /*
-  ** Saves given image to DB and to Disk
-  */
+  /// Saves given image to Database and to Disk
   func saveImage(user: User, bytes: Bytes) throws -> Image {
     
     guard let userId = user.id?.int else {
@@ -20,30 +18,29 @@ class ImageDispatcher {
     
     let path = drop.workDir + Image.imageDirectory
     let name = user.phoneId + "-" + UUID().uuidString + ".jpg"
-    
     var image = Image(userId: userId, name: name, path: path)
     let saveURL = URL(fileURLWithPath: image.path).appendingPathComponent(image.name, isDirectory: false)
-    
-    // save image to disk
     let data = Data(bytes: bytes)
-    try data.write(to: saveURL)
     
-    // save image to database
+    try data.write(to: saveURL)
     try image.save()
     
     return image
   }
   
-  // gets a random image from DB
+  /// Gets a random image from Database.
   func getRandomImage() throws -> Image {
-    
     let images = try Image.query().all()
-    let randomIndex = arc4random_uniform(UInt32(images.count))
     
+    guard !images.isEmpty else {
+      throw ImageError.noImagesFoundInDatabase
+    }
+    
+    let randomIndex = arc4random_uniform(UInt32(images.count))
     return images[Int(randomIndex)]
   }
   
-  // saves image and user sent image relation
+  /// Saves relation of sent image with user to database.
   func saveUserSentImage(user: User, image: Image) throws {
     
     guard let userId = user.id?.int, let imageId = image.id?.int else {
@@ -54,7 +51,7 @@ class ImageDispatcher {
     try sentImage.save()
   }
   
-  // saves user received image relation
+  /// Saves relation of image received with user to database.
   func saveUserReceivedImage(user: User, image: Image) throws {
     
     guard let userId = user.id?.int, let imageId = image.id?.int else {
@@ -65,6 +62,7 @@ class ImageDispatcher {
     try receivedImage.save()
   }
   
+  /// Returns array of names of images sent by given user
   func getAllImagesBy(user: User) throws -> [String] {
     
     guard let userId = user.id?.int else {

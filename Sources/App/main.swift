@@ -46,7 +46,7 @@ drop.get("image/random") { req in
     
     return try JSON(node: [
       "image": randomImage.name
-      ])
+    ])
   }
   
   return "couldn't get random image"
