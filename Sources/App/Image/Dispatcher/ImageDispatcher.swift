@@ -13,7 +13,7 @@ class ImageDispatcher {
   func saveImage(user: User, bytes: Bytes) throws -> Image {
     
     guard let userId = user.id?.int else {
-      throw UserError.userIdNotAvailble
+      throw UserError.userPhoneUUIDNotFound
     }
     
     let path = drop.workDir + Image.imageDirectory
@@ -66,7 +66,7 @@ class ImageDispatcher {
   func getAllImagesBy(user: User) throws -> [String] {
     
     guard let userId = user.id?.int else {
-      throw UserError.userIdNotAvailble
+      throw UserError.userPhoneUUIDNotFound
     }
     
     let images = try Image.query().filter("userid", userId).all().map {$0.name}

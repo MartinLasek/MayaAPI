@@ -23,7 +23,7 @@ class UserDispatcher {
   func getUserBy(phoneUUID: String) throws -> User {
     
     guard let usr = try User.query().filter("phoneid", phoneUUID).first() else {
-      throw UserError.userIdNotAvailble
+      throw UserError.userByPhoneUUIDNotFound
     }
     
     return usr

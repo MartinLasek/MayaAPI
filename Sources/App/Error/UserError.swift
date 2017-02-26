@@ -1,3 +1,4 @@
 enum UserError: Error {
-  case userIdNotAvailble
+  case userPhoneUUIDNotFound
+  case userByPhoneUUIDNotFound
 }
