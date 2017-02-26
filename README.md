@@ -4,7 +4,7 @@
 
 I use this project to dive deeper into backend programming with [Swift](https://github.com/apple/swift) using [Vapor](https://github.com/vapor/vapor)!
 
-## Workplan
+## Workplan (MVP)
 
 Date | Functionality
 --- | ---
@@ -14,8 +14,9 @@ Date | Functionality
 07.02.2017 | save relation of sent image to user
 08.02.2017 | save relation of received image by user
 11.02.2017 | send all images by given user (received/sent)
+ | send all images by given user (sent only) 
  | send all images by given user (received only)
- | send all images by given user (sent only)
+ | save username
  | save wish created by user
  | send wishlist as json
  | save vote by user
