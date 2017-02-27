@@ -61,7 +61,24 @@ drop.get("image/list/sent") { req in
   if let id = req.headers["phoneUUID"] {
     
     let user = try userDispatcher.getUserBy(phoneUUID: id)
-    let images = try imageDispatcher.getAllImagesBy(user: user)
+    let images = try imageDispatcher.getSentImagesBy(user: user)
+    
+    return try JSON(node: images)
+  }
+  
+  return "could not return all images"
+}
+
+// currently returning all images related to given user
+drop.get("image/list/received") { req in
+  
+  let imageDispatcher = ImageDispatcher(drop: drop)
+  let userDispatcher = UserDispatcher(drop: drop)
+  
+  if let id = req.headers["phoneUUID"] {
+    
+    let user = try userDispatcher.getUserBy(phoneUUID: id)
+    let images = try imageDispatcher.getReceivedImagesBy(user: user)
     
     return try JSON(node: images)
   }

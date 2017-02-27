@@ -72,4 +72,37 @@ class ImageDispatcher {
     let images = try Image.query().filter("userid", userId).all().map {$0.name}
     return images
   }
+  
+  func getReceivedImagesBy(user: User) throws -> [String] {
+    
+    guard let userId = user.id?.int else {
+      throw UserError.userPhoneUUIDNotFound
+    }
+    
+    let imageIds = try ReceivedImage.query().filter("userid", userId).all().map {$0.imageId}
+    var images = [String]()
+    
+    for id in imageIds {
+      images.append(try Image.query().filter("id", id).first().map {$0.name}!)
+    }
+    
+    return images
+  }
+  
+  func getSentImagesBy(user: User) throws -> [String] {
+    
+    guard let userId = user.id?.int else {
+      throw UserError.userPhoneUUIDNotFound
+    }
+    
+    let imageIds = try SentImage.query().filter("userid", userId).all().map {$0.imageId}
+    var images = [String]()
+    
+    for id in imageIds {
+      images.append(try Image.query().filter("id", id).first().map {$0.name}!)
+    }
+    
+    return images
+  }
+
 }
