@@ -14,8 +14,8 @@ Date | Functionality
 07.02.2017 | save relation of sent image to user
 08.02.2017 | save relation of received image by user
 11.02.2017 | send all images by given user (received/sent)
- | send all images by given user (received only)
- | send all images by given user (sent only)
+27.02.2017 | send all images by given user (received only)
+27.02.2017 | send all images by given user (sent only)
  | save wish created by user
  | send wishlist as json
  | save vote by user
