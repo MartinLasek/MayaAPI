@@ -16,8 +16,7 @@ drop.post("image/new") { req in
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
 
-  if let contentType = req.headers["Content-Type"], contentType.contains("image/png"), let id = req.headers["phoneUUID"], let bytes = req.body.bytes {
-    
+  if let isImage = req.headers["Content-Type"]?.contains("image/png"), let id = req.headers["phoneUUID"], let bytes = req.body.bytes {
     let user = try userDispatcher.saveUser(phoneUUID: id)
     let image = try imageDispatcher.saveImage(user: user, bytes: bytes)
     let randomImage = try imageDispatcher.getRandomImage()
@@ -35,13 +34,14 @@ drop.post("image/new") { req in
 
 // returns random image
 drop.get("image/random") { req in
+  
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
   
   if let phoneUUID = req.headers["phoneUUID"] {
-    
     let user = try userDispatcher.getUserBy(phoneUUID: phoneUUID)
     let randomImage = try imageDispatcher.getRandomImage()
+    
     try imageDispatcher.saveUserReceivedImage(user: user, image: randomImage)
     
     return try JSON(node: [
@@ -52,42 +52,39 @@ drop.get("image/random") { req in
   return "couldn't get random image"
 }
 
-// currently returning all images related to given user
+// returns sent images by given user
 drop.get("image/list/sent") { req in
   
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
   
   if let id = req.headers["phoneUUID"] {
-    
     let user = try userDispatcher.getUserBy(phoneUUID: id)
     let images = try imageDispatcher.getSentImagesBy(user: user)
     
     return try JSON(node: images)
   }
   
-  return "could not return all images"
+  return "could not return sent images"
 }
 
-// currently returning all images related to given user
+// returns received images by given user
 drop.get("image/list/received") { req in
   
   let imageDispatcher = ImageDispatcher(drop: drop)
   let userDispatcher = UserDispatcher(drop: drop)
   
   if let id = req.headers["phoneUUID"] {
-    
     let user = try userDispatcher.getUserBy(phoneUUID: id)
     let images = try imageDispatcher.getReceivedImagesBy(user: user)
     
     return try JSON(node: images)
   }
   
-  return "could not return all images"
+  return "could not return received images"
 }
 
 // API Endpoint to be implemented
-// * image/list/received
 // * wishlist/list
 // * wishlist/new
 // * wishlist/update/{id}
