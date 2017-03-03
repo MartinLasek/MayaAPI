@@ -76,6 +76,7 @@ drop.get("image/list/received") { req in
 }
 
 // API Endpoint to be implemented
+// * username/save
 // * wishlist/list
 // * wishlist/new
 // * wishlist/update/{id}
