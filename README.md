@@ -16,10 +16,10 @@ Date | Functionality
 11.02.2017 | send all images by given user (received/sent)
 27.02.2017 | send all images by given user (received only)
 27.02.2017 | send all images by given user (sent only)
- | save username
+16.03.2017 | send all wishes
  | save wish created by user
- | send wishlist as json
- | save vote by user
+ | save wish vote by user
+ | save username
 
 ### Licence
 **No restrictions. Go wild with this API code base :D!**
