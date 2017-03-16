@@ -86,7 +86,12 @@ drop.get("wish/list") { req in
   
   for wish in wishes {
     
+    guard let wishId = wish.id?.int else {
+      throw WishError.wishIdNotFound
+    }
+    
     node.append(Node([
+      "id": Node(wishId),
       "votes": Node(try wishDispatcher.getVotesFor(wish: wish)),
       "description": Node(wish.description),
       "userPhoneUUID": Node(wish.userPhoneUUID)
