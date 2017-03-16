@@ -17,7 +17,7 @@ let userDispatcher = UserDispatcher(drop: drop)
 let wishDispatcher = WishDispatcher(drop: drop)
 
 // saves new image to database
-drop.post("image/new") { req in
+drop.get("image/new") { req in
   
   if let isImage = req.headers["Content-Type"]?.contains("image/png"), let id = req.headers["phoneUUID"], let bytes = req.body.bytes {
     let user = try userDispatcher.saveUser(phoneUUID: id)
@@ -32,7 +32,7 @@ drop.post("image/new") { req in
     ])
   }
   
-  return "could not save image"
+  return "EROR\n- user phone uuid is missing\nOR\n- content-type doesn't contain `image/png`\nOR\n- body bytes are missing"
 }
 
 // returns random image
@@ -49,7 +49,7 @@ drop.get("image/random") { req in
     ])
   }
   
-  return "couldn't get random image"
+  return "user phone uuid is missing"
 }
 
 // returns sent images by given user
@@ -62,7 +62,7 @@ drop.get("image/list/sent") { req in
     return try JSON(node: images)
   }
   
-  return "could not return sent images"
+  return "user phone uuid is missing"
 }
 
 // returns received images by given user
@@ -75,30 +75,36 @@ drop.get("image/list/received") { req in
     return try JSON(node: images)
   }
   
-  return "could not return received images"
+  return "user phone uuid is missing"
 }
 
 // returns json listing wishes with description, userPhoneUUID, votes
 drop.get("wish/list") { req in
-  let wishes = try wishDispatcher.getAllWishes()
-  let votes = try wishes.map { try wishDispatcher.getVotesFor(wish: $0) }
-  var node = [Node]()
   
-  for wish in wishes {
+  if let userPhoneUUID = req.headers["phoneUUID"] {
     
-    guard let wishId = wish.id?.int else {
-      throw WishError.wishIdNotFound
+    let wishes = try wishDispatcher.getAllWishes()
+    var node = [Node]()
+    
+    for wish in wishes {
+      
+      guard let wishId = wish.id?.int else {
+        throw WishError.wishIdNotFound
+      }
+      
+      node.append(Node([
+        "id": Node(wishId),
+        "votes": Node(try wishDispatcher.getVotesFor(wish: wish)),
+        "description": Node(wish.description),
+        "userPhoneUUID": Node(wish.userPhoneUUID),
+        "isOwner": Node(wish.userPhoneUUID == userPhoneUUID)
+      ]))
     }
     
-    node.append(Node([
-      "id": Node(wishId),
-      "votes": Node(try wishDispatcher.getVotesFor(wish: wish)),
-      "description": Node(wish.description),
-      "userPhoneUUID": Node(wish.userPhoneUUID)
-    ]))
+    return try JSON(node: node)
   }
   
-  return try JSON(node: node)
+  return "user phone uuid is missing"
 }
 
 // API Endpoint to be implemented
