@@ -9,9 +9,11 @@ drop.preparations.append(User.self)
 drop.preparations.append(Image.self)
 drop.preparations.append(SentImage.self)
 drop.preparations.append(ReceivedImage.self)
+drop.preparations.append(WishEntity.self)
 
 let imageDispatcher = ImageDispatcher(drop: drop)
 let userDispatcher = UserDispatcher(drop: drop)
+let wishDispatcher = WishDispatcher(drop: drop)
 
 // saves new image to database
 drop.post("image/new") { req in
@@ -75,10 +77,15 @@ drop.get("image/list/received") { req in
   return "could not return received images"
 }
 
+drop.get("wish/list") { req in
+  let wishes = try wishDispatcher.getAllWishes()
+
+  return try wishes.makeJSON()
+}
+
 // API Endpoint to be implemented
 // * username/save
-// * wishlist/list
-// * wishlist/new
-// * wishlist/update/{id}
+// * wish/new
+// * wish/update/{id}
 
 drop.run()
