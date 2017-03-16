@@ -10,26 +10,26 @@ import Vapor
 
 final class WishEntity: Model {
   
+  static var entity = "wishes"
   var exists: Bool = false
   var id: Node?
-  var userId: Int
+  var userPhoneUUID: String
   var description: String
-  static var entity = "wishes"
   
-  init(description: String, userId: Int) {
+  init(description: String, userPhoneUUID: String) {
     self.description = description
-    self.userId = userId
+    self.userPhoneUUID = userPhoneUUID
   }
   
   init(node: Node, in context: Context) throws {
     description = try node.extract("description")
-    userId = try node.extract("userid")
+    userPhoneUUID = try node.extract("userphoneuuid")
   }
   
   func makeNode(context: Context) throws -> Node {
     return try Node(node: [
       "description": description,
-      "userid": userId
+      "userphoneuuid": userPhoneUUID
     ])
   }
   
@@ -38,7 +38,7 @@ final class WishEntity: Model {
     try database.create(entity) { wish in
       wish.id()
       wish.string("description")
-      wish.string("userid")
+      wish.string("userphoneuuid")
     }
   }
   

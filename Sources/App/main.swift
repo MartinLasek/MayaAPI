@@ -10,6 +10,7 @@ drop.preparations.append(Image.self)
 drop.preparations.append(SentImage.self)
 drop.preparations.append(ReceivedImage.self)
 drop.preparations.append(WishEntity.self)
+drop.preparations.append(VoteEntity.self)
 
 let imageDispatcher = ImageDispatcher(drop: drop)
 let userDispatcher = UserDispatcher(drop: drop)
@@ -77,10 +78,22 @@ drop.get("image/list/received") { req in
   return "could not return received images"
 }
 
+// returns json listing wishes with description, userPhoneUUID, votes
 drop.get("wish/list") { req in
   let wishes = try wishDispatcher.getAllWishes()
-
-  return try wishes.makeJSON()
+  let votes = try wishes.map { try wishDispatcher.getVotesFor(wish: $0) }
+  var node = [Node]()
+  
+  for wish in wishes {
+    
+    node.append(Node([
+      "votes": Node(try wishDispatcher.getVotesFor(wish: wish)),
+      "description": Node(wish.description),
+      "userPhoneUUID": Node(wish.userPhoneUUID)
+    ]))
+  }
+  
+  return try JSON(node: node)
 }
 
 // API Endpoint to be implemented
