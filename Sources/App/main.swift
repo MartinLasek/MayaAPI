@@ -17,7 +17,7 @@ let userDispatcher = UserDispatcher(drop: drop)
 let wishDispatcher = WishDispatcher(drop: drop)
 
 // saves new image to database
-drop.get("image/new") { req in
+drop.post("image/new") { req in
   
   if let isImage = req.headers["Content-Type"]?.contains("image/png"), let id = req.headers["phoneUUID"], let bytes = req.body.bytes {
     let user = try userDispatcher.saveUser(phoneUUID: id)
