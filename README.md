@@ -17,7 +17,7 @@ Date | Functionality
 27.02.2017 | send all images by given user (received only)
 27.02.2017 | send all images by given user (sent only)
 16.03.2017 | send all wishes
- | save wish created by user
+18.03.2017 | save wish created by user
  | save wish vote by user
  | save username
 

@@ -107,6 +107,17 @@ drop.get("wish/list") { req in
   return "user phone uuid is missing"
 }
 
+drop.post("wish/new") { req in
+  
+  guard let userPhoneUUID = req.headers["phoneUUID"], let wishDescription = req.headers["wish"] else {
+    throw WishError.phoneUUIDOrWishNotGiven
+  }
+  
+  try wishDispatcher.create(wish: wishDescription, userPhoneUUID: userPhoneUUID)
+  
+  return "successful add a new wish"
+}
+
 // API Endpoint to be implemented
 // * username/save
 // * wish/new
