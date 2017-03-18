@@ -22,10 +22,8 @@ drop.post("image/new") { req in
   if let isImage = req.headers["Content-Type"]?.contains("image/png"), let id = req.headers["phoneUUID"], let bytes = req.body.bytes {
     let user = try userDispatcher.saveUser(phoneUUID: id)
     let image = try imageDispatcher.saveImage(user: user, bytes: bytes)
-    let randomImage = try imageDispatcher.getRandomImage()
     
     try imageDispatcher.saveUserSentImage(user: user, image: image)
-    try imageDispatcher.saveUserReceivedImage(user: user, image: randomImage)
 
     return try JSON(node: [
         "image": randomImage.name
