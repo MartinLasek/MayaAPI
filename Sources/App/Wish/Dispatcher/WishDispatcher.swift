@@ -43,7 +43,7 @@ class WishDispatcher {
     let wish = try wishDispatcher.getWishBy(wishId: wishId)
     
     if (wish.userPhoneUUID == userPhoneUUID) {
-      throw WishError.cannotVoteForOwnWish
+      return
     }
     
     let user = try userDispatcher.getUserBy(phoneUUID: userPhoneUUID)
