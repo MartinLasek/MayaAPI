@@ -37,4 +37,31 @@ class WishDispatcher {
     var vote = VoteEntity(userId: userId, wishId: wishId)
     try vote.save()
   }
+  
+  func vote(wishId: Int, userPhoneUUID: String) throws {
+    
+    let wish = try wishDispatcher.getWishBy(wishId: wishId)
+    
+    if (wish.userPhoneUUID == userPhoneUUID) {
+      throw WishError.cannotVoteForOwnWish
+    }
+    
+    let user = try userDispatcher.getUserBy(phoneUUID: userPhoneUUID)
+    
+    guard let userId = user.id?.int, let wishId = wish.id?.int else {
+      throw WishError.couldNotConvertId
+    }
+    
+    var vote = VoteEntity(userId: userId, wishId: wishId)
+    try vote.save()
+  }
+  
+  func getWishBy(wishId: Int) throws -> WishEntity {
+    
+    guard let wish = try WishEntity.query().filter("id", wishId).first() else {
+      throw WishError.wishNotFound
+    }
+    
+    return wish
+  }
 }

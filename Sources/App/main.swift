@@ -24,10 +24,6 @@ drop.post("image/new") { req in
     let image = try imageDispatcher.saveImage(user: user, bytes: bytes)
     
     try imageDispatcher.saveUserSentImage(user: user, image: image)
-
-    return try JSON(node: [
-        "image": randomImage.name
-    ])
   }
   
   return "EROR\n- user phone uuid is missing\nOR\n- content-type doesn't contain `image/png`\nOR\n- body bytes are missing"
@@ -114,6 +110,21 @@ drop.post("wish/new") { req in
   try wishDispatcher.create(wish: wishDescription, userPhoneUUID: userPhoneUUID)
   
   return "successful add a new wish"
+}
+
+drop.post("wish/vote") { req in
+  
+  guard let userPhoneUUID = req.headers["phoneUUID"], let wishIdAsString = req.headers["wishId"] else {
+    throw WishError.phoneUUIDOrWishIdNotGiven
+  }
+  
+  guard let wishId = Int(wishIdAsString) else {
+    throw WishError.couldNotConvertId
+  }
+  
+  try wishDispatcher.vote(wishId: wishId, userPhoneUUID: userPhoneUUID)
+  
+  return "successful voted for a wish"
 }
 
 // API Endpoint to be implemented
