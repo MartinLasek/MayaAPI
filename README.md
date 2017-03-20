@@ -19,7 +19,6 @@ Date | Functionality
 16.03.2017 | send all wishes
 18.03.2017 | save wish created by user
 19.03.2017 | save wish vote by user
- | save username
 
 ### Licence
 **No restrictions. Go wild with this API code base :D!**
