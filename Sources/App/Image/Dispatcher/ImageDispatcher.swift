@@ -36,8 +36,8 @@ class ImageDispatcher {
       throw ImageError.noImagesFoundInDatabase
     }
     
-    let randomIndex = arc4random_uniform(UInt32(images.count))
-    return images[Int(randomIndex)]
+    let randomIndex = Int.random(min: 0, max: images.count - 1)
+    return images[randomIndex]
   }
   
   /// Saves relation of sent image with user to database.
